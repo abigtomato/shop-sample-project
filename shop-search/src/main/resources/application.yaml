@@ -1,0 +1,13 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: search-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.121.100:8848
+  elasticsearch:
+    rest:
+      uris: http://192.168.121.100:9200
