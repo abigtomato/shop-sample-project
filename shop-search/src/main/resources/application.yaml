@@ -2,8 +2,6 @@ server:
   port: 8086
 
 spring:
-  application:
-    name: search-service
   cloud:
     nacos:
       discovery:
@@ -11,3 +9,11 @@ spring:
   elasticsearch:
     rest:
       uris: http://192.168.121.100:9200
+  jackson:
+    default-property-inclusion: non_null
+  rabbitmq:
+    host: 192.168.121.100
+    port: 5672
+    virtual-host: /abigtomato
+    username: guest
+    password: guest

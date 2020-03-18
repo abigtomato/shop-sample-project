@@ -22,8 +22,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -48,19 +50,26 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
 
     private ShopSmsClient shopSmsClient;
 
+    private AmqpTemplate amqpTemplate;
+
+    @Value(value = "${item.rabbitmq.exchange}")
+    private String EXCHANGE_NAME;
+
     @Autowired
     public SpuInfoServiceImpl(SpuInfoDescService spuInfoDescService,
                               ProductAttrValueService productAttrValueService,
                               SkuInfoService skuInfoService,
                               SkuImagesService skuImagesService,
                               SkuSaleAttrValueService skuSaleAttrValueService,
-                              ShopSmsClient shopSmsClient) {
+                              ShopSmsClient shopSmsClient,
+                              AmqpTemplate amqpTemplate) {
         this.spuInfoDescService = spuInfoDescService;
         this.productAttrValueService = productAttrValueService;
         this.skuInfoService = skuInfoService;
         this.skuImagesService = skuImagesService;
         this.skuSaleAttrValueService = skuSaleAttrValueService;
         this.shopSmsClient = shopSmsClient;
+        this.amqpTemplate = amqpTemplate;
     }
 
     @Override
@@ -83,7 +92,6 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
     @Override
     @GlobalTransactional    // 开启全局事务
     public void spuSave(SpuInfoVo spuInfoVo) {
-        // 1.保存spu相关的3张表
         // 1.1 保存pms_spu_info
         Long spuId = this.saveSpuInfo(spuInfoVo);
 
@@ -95,6 +103,13 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
 
         // 2.保存sku相关的3张表
         this.saveSkuAndSale(spuInfoVo, spuId);
+
+        // 3.发送新增类型的消息（更新索引，更新缓存）
+        this.sendMsg("insert", spuId);
+    }
+
+    private void sendMsg(String type, Long spuId) {
+        this.amqpTemplate.convertAndSend(EXCHANGE_NAME, "item" + type, spuId);
     }
 
     private void saveSkuAndSale(SpuInfoVo spuInfoVo, Long spuId) {

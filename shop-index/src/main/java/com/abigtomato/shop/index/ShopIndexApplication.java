@@ -1,4 +1,4 @@
-package com.abigtomato.shop;
+package com.abigtomato.shop.index;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,11 +6,11 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableDiscoveryClient
 @EnableFeignClients
-public class ShopSearchApplication {
+@EnableDiscoveryClient
+public class ShopIndexApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ShopSearchApplication.class, args);
+        SpringApplication.run(ShopIndexApplication.class, args);
     }
 }

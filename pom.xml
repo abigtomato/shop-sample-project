@@ -16,6 +16,10 @@
         <module>shop-wms</module>
         <module>shop-sms-interface</module>
         <module>shop-search</module>
+        <module>shop-pms-interface</module>
+        <module>shop-wms-interface</module>
+        <module>shop-index</module>
+        <module>shop-item</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -40,6 +44,7 @@
         <fastjson.version>1.2.66</fastjson.version>
         <hutool.version>5.2.1</hutool.version>
         <lombox.version>1.18.12</lombox.version>
+        <redisson.version>3.11.6</redisson.version>
         <docker.image.prefix>shop-sample-project</docker.image.prefix>
     </properties>
 
@@ -69,6 +74,12 @@
                 <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!-- redisson -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
             <!-- mysql驱动 -->
             <dependency>
