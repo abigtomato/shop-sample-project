@@ -26,7 +26,7 @@
 
         <dependency>
             <groupId>com.abigtomato</groupId>
-            <artifactId>shop-core</artifactId>
+            <artifactId>shop-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
