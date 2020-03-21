@@ -23,6 +23,8 @@
         <module>shop-model</module>
         <module>shop-api</module>
         <module>shop-auth</module>
+        <module>shop-cart</module>
+        <module>shop-order</module>
     </modules>
     <packaging>pom</packaging>
 
