@@ -2,25 +2,25 @@ package com.abigtomato.shop.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
 import com.abigtomato.shop.gateway.service.AuthService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.core.Ordered;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * 用户身份认证过滤器
+ */
 @Component
-@Slf4j
-public class LoginFilter implements GlobalFilter, Ordered {
+public class AuthFilter implements GatewayFilter {
 
     private AuthService authService;
 
     @Autowired
-    public LoginFilter(AuthService authService) {
+    public AuthFilter(AuthService authService) {
         this.authService = authService;
     }
 
@@ -30,27 +30,26 @@ public class LoginFilter implements GlobalFilter, Ordered {
 
         String token = this.authService.getTokenFromCookie(request);
         if (StrUtil.isEmpty(token)) {
+            // cookie中没有携带身份令牌，拦截
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
 
         String jwt = this.authService.getJwtFromHeader(request);
         if (StrUtil.isEmpty(jwt)) {
+            // header中没有jwt令牌，拦截
             exchange.getResponse().setStatusCode(HttpStatus.NOT_ACCEPTABLE);
             return exchange.getResponse().setComplete();
         }
 
         long expire = this.authService.getExpire(token);
         if (expire < 0) {
+            // redis中的令牌信息过期，拦截
             exchange.getResponse().setStatusCode(HttpStatus.NOT_ACCEPTABLE);
             return exchange.getResponse().setComplete();
         }
 
-        return chain.filter(exchange);  // 传递到过滤链上，让链上的其他过滤器处理
-    }
-
-    @Override
-    public int getOrder() {
-        return 0;
+        // 传递到过滤链上，让链上的其他过滤器处理（放行）
+        return chain.filter(exchange);
     }
 }

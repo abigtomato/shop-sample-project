@@ -53,28 +53,33 @@ public class AuthController implements AuthApi {
     @Override
     @PostMapping(value = "/userlogin")
     public LoginResult login(@RequestBody LoginRequest loginRequest) {
-        if (loginRequest == null || StrUtil.isEmpty(loginRequest.getUsername())) {
+        String username = loginRequest.getUsername();
+        if (StrUtil.isEmpty(username)) {
             ExceptionCast.cast(AuthCode.AUTH_USERNAME_NONE);
         }
 
-        if (StrUtil.isEmpty(loginRequest.getPassword())) {
+        String password = loginRequest.getPassword();
+        if (StrUtil.isEmpty(password)) {
             ExceptionCast.cast(AuthCode.AUTH_PASSWORD_NONE);
         }
 
-        String username = loginRequest.getUsername();
-        String password = loginRequest.getPassword();
-
+        // 根据用户信息和客户端信息，获取身份认证
         Optional<AuthToken> authTokenOptional = this.authService.login(username, password, clientId, clientSecret);
         if (!authTokenOptional.isPresent()) {
             return LoginResult.build(CommonCode.FAIL, null);
         }
 
+        // 取出用户身份令牌，存入cookie
         String access_token = authTokenOptional.get().getAccess_token();
         this.saveCookie(access_token);
 
         return LoginResult.build(CommonCode.SUCCESS, access_token);
     }
 
+    /**
+     * 存储身份令牌到cookie
+     * @param access_token
+     */
     private void saveCookie(String access_token) {
         HttpServletResponse response = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getResponse();
         if (response != null) {
@@ -85,24 +90,42 @@ public class AuthController implements AuthApi {
     @Override
     @PostMapping(value = "/userlogout")
     public ResponseResult logout() {
+        // 获取身份令牌
         String uid = this.getTokenFromCookie();
+        if (StrUtil.isEmpty(uid)) {
+            return new ResponseResult(CommonCode.FAIL);
+        }
+
+        // 删除redis中对应的完整令牌信息
         this.authService.delToken(uid);
+
+        // 清除cookie
         this.clearCookie(uid);
+
         return new ResponseResult(CommonCode.SUCCESS);
     }
 
+    /**
+     * 从cookie中获取用户身份令牌
+     * @return
+     */
     private String getTokenFromCookie() {
         HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         Map<String, String> map = CookieUtil.readCookie(request, "uid");
-        if (map.get("uid") == null) {
+        if (StrUtil.isEmpty(map.get("uid"))) {
             return null;
         }
         return map.get("uid");
     }
 
+    /**
+     * 清空cookie
+     * @param access_token
+     */
     private void clearCookie(String access_token) {
         HttpServletResponse response = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getResponse();
         if (response != null) {
+            // 将cookie存活时间置为0
             CookieUtil.addCookie(response, cookieDomain, "/", "uid", access_token, 0, false);
         }
     }
@@ -110,11 +133,13 @@ public class AuthController implements AuthApi {
     @Override
     @GetMapping(value = "/userjwt")
     public JwtResult userjwt() {
+        // 获取身份令牌
         String uid = this.getTokenFromCookie();
         if (StrUtil.isEmpty(uid)) {
             return new JwtResult(CommonCode.FAIL, null);
         }
 
+        // 根据身份令牌从redis获取完整的令牌信息
         Optional<AuthToken> authTokenOptional = this.authService.getUserToken(uid);
         if (!authTokenOptional.isPresent()) {
             return new JwtResult(CommonCode.FAIL, null);

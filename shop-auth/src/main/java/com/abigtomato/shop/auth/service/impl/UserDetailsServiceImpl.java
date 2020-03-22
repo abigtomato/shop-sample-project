@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 实现spring security提供的UserDetailsService
+ */
 @Service(value = "userDetailsService")
 @Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -38,6 +41,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         this.clientDetailsService = clientDetailsService;
     }
 
+    /**
+     * spring security在验证用户身份的时候会调用
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -54,11 +63,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             return null;
         }
 
+        // 根据用户名获取用户信息
         XcUserExt userext = this.userClient.getUserext(username);
         if (userext == null) {
             return null;
         }
 
+        // 获取密码和用户权限信息
         String password = userext.getPassword();
         List<XcMenu> permissions = userext.getPermissions();
         if (CollUtil.isEmpty(permissions)) {
@@ -70,13 +81,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .collect(Collectors.toList());
         String userPermissionStr = StrUtil.join(",", userPermission);
 
+        // 封装jwt用户对象
         UserJwt userDetails = new UserJwt(username, password,
                 AuthorityUtils.commaSeparatedStringToAuthorityList(userPermissionStr));
         userDetails.setId(userext.getId());
-        userDetails.setUtype(userext.getUtype());   // 用户类型
+        userDetails.setUtype(userext.getUtype());           // 用户类型
         userDetails.setCompanyId(userext.getCompanyId());   // 所属企业
-        userDetails.setName(userext.getName()); // 用户名称
-        userDetails.setUserpic(userext.getUserpic());   // 用户头像
+        userDetails.setName(userext.getName());             // 用户名称
+        userDetails.setUserpic(userext.getUserpic());       // 用户头像
 
         return userDetails;
     }

@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * RestTemplate配置类，使用okhttp3做为httpclient发送请求
+ */
 @Configuration
 public class RestTemplateConfig {
 

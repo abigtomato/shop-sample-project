@@ -31,20 +31,24 @@ spring:
       timeBetweenEvictionRunsMillis: 60000 # 配置间隔检测连接是否有效的时间（单位是毫秒）
       minEvictableIdleTimeMillis: 300000  # 连接在连接池的最小生存时间（毫秒）
 
+# 自定义配置
 auth:
   tokenValiditySeconds: 1200  # token存储到redis中的过期时间
-  clientId: XcWebApp
-  clientSecret: XcWebApp
-  cookieDomain: xuecheng.com
-  cookieMaxAge: -1
+  clientId: XcWebApp      # oauth2客户端id（需要在oauth2相关表中设置）
+  clientSecret: XcWebApp  # oauth2客户端密码
+  cookieDomain: shop.com  # cookie作用域名
+  cookieMaxAge: -1        # cookie存活时间（关闭浏览器失效）
 
+# 认证服务相关配置
 encrypt:
+  # 证书配置
   key-store:
-    location: classpath:/xc.keystore
-    secret: xuechengkeystore
-    alias: xckey
-    password: xuecheng
+    location: classpath:/shop.keystore  # 证书路径（包含私钥）
+    secret: 123456    # 密钥库密码
+    alias: skey       # 别名
+    password: 123456  # 密钥密码
 
+# mybatis-plus配置
 mybatis-plus:
   global-config:
     db-config:

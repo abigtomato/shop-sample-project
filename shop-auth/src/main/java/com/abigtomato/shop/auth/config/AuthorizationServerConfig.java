@@ -25,15 +25,15 @@ import javax.sql.DataSource;
 import java.security.KeyPair;
 
 /**
- * oauth2认证服务配置
+ * spring security oauth2认证服务器配置
  */
 @Configuration
-@EnableAuthorizationServer
+@EnableAuthorizationServer  // 开启oauth2认证服务器
 class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private DataSource dataSource;
 
-    private JwtAccessTokenConverter jwtAccessTokenConverter;    // jwt令牌转换器
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
 
     private UserDetailsService userDetailsService;
 
@@ -41,21 +41,20 @@ class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     private TokenStore tokenStore;
 
-    private CustomUserAuthenticationConverter customUserAuthenticationConverter;
+    @Resource(name = "keyProp")
+    private KeyProperties keyProperties;
 
     @Autowired
     public AuthorizationServerConfig(DataSource dataSource,
                                      JwtAccessTokenConverter jwtAccessTokenConverter,
                                      UserDetailsService userDetailsService,
                                      AuthenticationManager authenticationManager,
-                                     TokenStore tokenStore,
-                                     CustomUserAuthenticationConverter customUserAuthenticationConverter) {
+                                     TokenStore tokenStore) {
         this.dataSource = dataSource;
         this.jwtAccessTokenConverter = jwtAccessTokenConverter;
         this.userDetailsService = userDetailsService;
         this.authenticationManager = authenticationManager;
         this.tokenStore = tokenStore;
-        this.customUserAuthenticationConverter = customUserAuthenticationConverter;
     }
 
     /**
@@ -66,9 +65,6 @@ class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
     public KeyProperties keyProperties() {
         return new KeyProperties();
     }
-
-    @Resource(name = "keyProp")
-    private KeyProperties keyProperties;
 
     /**
      * 客户端配置
@@ -81,31 +77,9 @@ class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        // 基于内存
-//        clients.inMemory()
-//                .withClient("XcWebApp") // 客户端id
-//                .secret("XcWebApp") // 密码，要保密
-//                .accessTokenValiditySeconds(60) // 访问令牌有效期
-//                .refreshTokenValiditySeconds(60)    // 刷新令牌有效期
-//                // 授权客户端请求认证服务的类型authorization_code：根据授权码生成令牌，
-//                // client_credentials:客户端认证，refresh_token：刷新令牌，password：密码方式认证
-//                .authorizedGrantTypes("authorization_code", "client_credentials", "refresh_token", "password")
-//                .scopes("app"); // 客户端范围，名称自定义，必填
-
-        // 基于数据库
+        // 基于数据库存储
         clients.jdbc(this.dataSource).clients(this.clientDetails());
     }
-
-//    @Bean
-//    public InMemoryTokenStore tokenStore() {
-//        return new InMemoryTokenStore();  // 将令牌存储到内存
-//    }
-
-//    @Bean
-//    public TokenStore tokenStore(RedisConnectionFactory redisConnectionFactory){
-//        RedisTokenStore redisTokenStore = new RedisTokenStore(redisConnectionFactory);
-//        return redisTokenStore;
-//    }
 
     @Bean
     @Autowired
@@ -113,47 +87,36 @@ class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
         return new JwtTokenStore(jwtAccessTokenConverter);
     }
 
+    /**
+     * jwt令牌转化器
+     * @param customUserAuthenticationConverter
+     * @return
+     */
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter(CustomUserAuthenticationConverter customUserAuthenticationConverter) {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        KeyPair keyPair = new KeyStoreKeyFactory
-                (keyProperties.getKeyStore().getLocation(), keyProperties.getKeyStore().getSecret().toCharArray())
-                .getKeyPair(keyProperties.getKeyStore().getAlias(),keyProperties.getKeyStore().getPassword().toCharArray());
+        KeyPair keyPair = new KeyStoreKeyFactory(keyProperties.getKeyStore().getLocation(),
+                keyProperties.getKeyStore().getSecret().toCharArray()).getKeyPair(keyProperties.getKeyStore().getAlias(),
+                keyProperties.getKeyStore().getPassword().toCharArray());
         converter.setKeyPair(keyPair);
-        // 配置自定义的CustomUserAuthenticationConverter
+
+        // 使用自定义的用户身份验证转换器
         DefaultAccessTokenConverter accessTokenConverter = (DefaultAccessTokenConverter) converter.getAccessTokenConverter();
         accessTokenConverter.setUserTokenConverter(customUserAuthenticationConverter);
         return converter;
     }
 
     /**
-     * 授权服务器端点配置
+     * 授权服务器相关配置
      * @param endpoints
      * @throws Exception
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-//        Collection<TokenEnhancer> tokenEnhancers = applicationContext.getBeansOfType(TokenEnhancer.class).values();
-//        TokenEnhancerChain tokenEnhancerChain=new TokenEnhancerChain();
-//        tokenEnhancerChain.setTokenEnhancers(new ArrayList<>(tokenEnhancers));
-//
-//        DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
-//        defaultTokenServices.setReuseRefreshToken(true);
-//        defaultTokenServices.setSupportRefreshToken(true);
-//        defaultTokenServices.setTokenStore(tokenStore);
-//        defaultTokenServices.setAccessTokenValiditySeconds(1111111);
-//        defaultTokenServices.setRefreshTokenValiditySeconds(1111111);
-//        defaultTokenServices.setTokenEnhancer(tokenEnhancerChain);
-//
-//        endpoints.authenticationManager(authenticationManager)
-//                .userDetailsService(userDetailsService)
-//                .tokenStore(tokenStore);
-//                .tokenServices(defaultTokenServices);
-
-        endpoints.accessTokenConverter(jwtAccessTokenConverter)
-                .authenticationManager(authenticationManager)   // 认证管理器
-                .tokenStore(tokenStore) // 令牌存储
-                .userDetailsService(userDetailsService);    // 用户信息service
+        endpoints.accessTokenConverter(jwtAccessTokenConverter) // 令牌转换器设置
+                .authenticationManager(authenticationManager)   // 认证管理器设置
+                .tokenStore(tokenStore)                         // 令牌存储设置
+                .userDetailsService(userDetailsService);        // 用户信息service设置
     }
 
     /**
@@ -163,10 +126,8 @@ class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
      */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
-//        oauthServer.checkTokenAccess("isAuthenticated()");    // 校验token需要认证通过，可采用http basic认证
-
-        oauthServer.allowFormAuthenticationForClients()
-                .passwordEncoder(new BCryptPasswordEncoder())
+        oauthServer.allowFormAuthenticationForClients()         // 允许客户端进行表单身份验证
+                .passwordEncoder(new BCryptPasswordEncoder())   // 设置密码的加密方式
                 .tokenKeyAccess("permitAll()")
                 .checkTokenAccess("isAuthenticated()");
     }

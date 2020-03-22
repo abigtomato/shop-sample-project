@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * 自定义用户身份验证转换器
+ */
 @Component
 public class CustomUserAuthenticationConverter extends DefaultUserAuthenticationConverter {
 
@@ -22,28 +25,35 @@ public class CustomUserAuthenticationConverter extends DefaultUserAuthentication
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * 验证用户身份（自定义响应）
+     * @param authentication
+     * @return
+     */
     @Override
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
         LinkedHashMap<String, String> response = new LinkedHashMap<>();
+        // 获取用户名
         String name = authentication.getName();
-        response.put("user_name", name);
 
         Object principal = authentication.getPrincipal();
         UserJwt userJwt;
         if (principal instanceof UserJwt) {
             userJwt = (UserJwt) principal;
         } else {
-            // refresh_token默认不去调用userdetailService获取用户信息，这里我们手动去调用，得到UserJwt
+            // refresh_token默认不去调用userDetailsService获取用户信息
+            // 这里手动去调用loadUserByUsername验证用户身份的方法，得到UserJwt
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(name);
             userJwt = (UserJwt) userDetails;
         }
 
+        // 自定义响应体
+        response.put("user_name", name);
         response.put("name", userJwt.getName());
         response.put("id", userJwt.getId());
         response.put("utype", userJwt.getUtype());
         response.put("userpic", userJwt.getUserpic());
         response.put("companyId", userJwt.getCompanyId());
-
         if (authentication.getAuthorities() != null && !authentication.getAuthorities().isEmpty()) {
             response.put("authorities", String.valueOf(AuthorityUtils.authorityListToSet(authentication.getAuthorities())));
         }

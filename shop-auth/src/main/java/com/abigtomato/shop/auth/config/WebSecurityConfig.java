@@ -12,33 +12,36 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * spring security配置
+ * spring security配置类
  */
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity  // 开启security
 @Order(-1)
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/userlogin", "/userlogout", "/userjwt");    // 放行路径
+        // 配置放行的路径，登录，注销和获取令牌不用通过认证
+        web.ignoring().antMatchers("/userlogin", "/userlogout", "/userjwt");
     }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
+        // 身份验证管理器
         return super.authenticationManagerBean();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // 使用BCrypt对密码进行加密
+        // 配置密码的加密方式，使用BCrypt
+        return new BCryptPasswordEncoder();
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .httpBasic().and()
+                .httpBasic().and()  // 支持http basic
                 .formLogin().and()
                 .authorizeRequests()
                 .anyRequest()

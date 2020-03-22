@@ -6,6 +6,9 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
+/**
+ * jwt用户对象，继承与spring security提供的user对象
+ */
 @Getter
 @Setter
 @ToString

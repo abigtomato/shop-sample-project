@@ -42,6 +42,8 @@ public class AuthServiceImpl implements AuthService {
 
     private RestTemplate restTemplate;
 
+    private static final String REDIS_KEY_PREFIX = "user_token:";
+
     @Autowired
     public AuthServiceImpl(LoadBalancerClient loadBalancerClient,
                            StringRedisTemplate stringRedisTemplate,
@@ -53,23 +55,31 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Optional<AuthToken> login(String username, String password, String clientId, String clientSecret) {
+        // 获取身份令牌
         Optional<AuthToken> authTokenOptional = this.applyToken(username, password, clientId, clientSecret);
         if (!authTokenOptional.isPresent()) {
             ExceptionCast.cast(AuthCode.AUTH_LOGIN_APPLYTOKEN_FAIL);
         }
 
+        // 保存令牌信息到redis
         String accessToken = authTokenOptional.get().getAccess_token();
         String jsonStr = JSON.toJSONString(accessToken);
-
-        boolean result = this.saveToken(accessToken, jsonStr, tokenValiditySeconds);
+        boolean result = this.saveTokenToRedis(accessToken, jsonStr, tokenValiditySeconds);
         if (!result) {
             ExceptionCast.cast(AuthCode.AUTH_LOGIN_TOKEN_SAVEFAIL);
         }
         return authTokenOptional;
     }
 
-    private boolean saveToken(String accessToken, String jsonStr, int tokenValiditySeconds) {
-        String key = "user_token:" + accessToken;
+    /**
+     * 保存token到redis
+     * @param accessToken
+     * @param jsonStr
+     * @param tokenValiditySeconds
+     * @return
+     */
+    private boolean saveTokenToRedis(String accessToken, String jsonStr, int tokenValiditySeconds) {
+        String key = REDIS_KEY_PREFIX + accessToken;
 
         this.stringRedisTemplate.boundValueOps(key).set(jsonStr, tokenValiditySeconds, TimeUnit.SECONDS);
 
@@ -77,20 +87,32 @@ public class AuthServiceImpl implements AuthService {
         return expire != null && expire > 0;
     }
 
+    /**
+     * 获取oauth2的认证信息
+     * @param username
+     * @param password
+     * @param clientId
+     * @param clientSecret
+     * @return
+     */
     private Optional<AuthToken> applyToken(String username, String password, String clientId, String clientSecret) {
+        // 获取oauth2认证接口的地址
         ServiceInstance serviceInstance = this.loadBalancerClient.choose(ServiceNameList.UMS_SERVICE);
         URI uri = serviceInstance.getUri();
         String authUrl = uri + "/auth/oauth/token";
 
-        LinkedMultiValueMap<String, String> header = new LinkedMultiValueMap<>();
+        // 构造header
+        MultiValueMap<String, String> header = new LinkedMultiValueMap<>();
         String httpBasic = this.getHttpBasic(clientId, clientSecret);
-        header.add("Authorization", httpBasic);
+        header.add("Authorization", httpBasic); // http basic规范传递oauth2的客户端信息
 
-        LinkedMultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("grant_type", "password");
+        // 构造body
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "password"); // 密码认证方式
         body.add("username", username);
         body.add("password", password);
 
+        // 设置400和401错误不由框架控制
         this.restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
             @Override
             public void handleError(ClientHttpResponse response) throws IOException {
@@ -100,9 +122,12 @@ public class AuthServiceImpl implements AuthService {
             }
         });
 
+        // 发送请求获取响应
         ResponseEntity<Map> exchange = this.restTemplate.exchange(authUrl,
                 HttpMethod.POST, new HttpEntity<>(body, header), Map.class);
         Map bodyMap = exchange.getBody();
+
+        // 判断错误情况，自定义异常响应
         if (bodyMap == null ||
                 bodyMap.get("access_token") == null ||
                 bodyMap.get("refresh_token") == null ||
@@ -118,6 +143,7 @@ public class AuthServiceImpl implements AuthService {
             return Optional.empty();
         }
 
+        // 封装token对象
         AuthToken authToken = new AuthToken();
         authToken.setAccess_token((String) bodyMap.get("jti"));             // 用户身份令牌
         authToken.setRefresh_token((String) bodyMap.get("refresh_token"));  // 刷新令牌
@@ -125,6 +151,12 @@ public class AuthServiceImpl implements AuthService {
         return Optional.of(authToken);
     }
 
+    /**
+     * 获取http basic串
+     * @param clientId
+     * @param clientSecret
+     * @return
+     */
     private String getHttpBasic(String clientId, String clientSecret) {
         String string = clientId + ":" + clientSecret;
         byte[] encode = Base64Utils.encode(string.getBytes());
@@ -133,13 +165,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void delToken(String uid) {
-        String key = "user_token:" + uid;
+        String key = REDIS_KEY_PREFIX + uid;
         this.restTemplate.delete(key);
     }
 
     @Override
     public Optional<AuthToken> getUserToken(String uid) {
-        String key = "user_token:" + uid;
+        String key = REDIS_KEY_PREFIX + uid;
         String value = this.stringRedisTemplate.opsForValue().get(key);
 
         AuthToken authToken = JSON.parseObject(value, AuthToken.class);

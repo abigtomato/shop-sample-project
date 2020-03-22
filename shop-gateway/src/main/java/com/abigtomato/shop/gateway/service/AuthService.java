@@ -24,6 +24,11 @@ public class AuthService {
         this.redisTemplate = redisTemplate;
     }
 
+    /**
+     * 从cookie中获取身份令牌
+     * @param request
+     * @return
+     */
     public String getTokenFromCookie(ServerHttpRequest request) {
         MultiValueMap<String, HttpCookie> cookies = request.getCookies();
 
@@ -40,6 +45,11 @@ public class AuthService {
         return accessToken;
     }
 
+    /**
+     * 从header中获取jwt令牌
+     * @param request
+     * @return
+     */
     public String getJwtFromHeader(ServerHttpRequest request) {
         HttpHeaders headers = request.getHeaders();
 
@@ -54,6 +64,11 @@ public class AuthService {
         return authorization.substring(7);
     }
 
+    /**
+     * 获取redis中令牌信息的过期时间
+     * @param token
+     * @return
+     */
     public long getExpire(String token) {
         String key = "user_token:" + token;
         Long expire = this.redisTemplate.getExpire(key, TimeUnit.SECONDS);
