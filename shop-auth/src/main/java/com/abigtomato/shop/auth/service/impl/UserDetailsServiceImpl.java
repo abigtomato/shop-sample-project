@@ -83,7 +83,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         // 封装jwt用户对象
         UserJwt userDetails = new UserJwt(username, password,
-                AuthorityUtils.commaSeparatedStringToAuthorityList(userPermissionStr));
+                AuthorityUtils.commaSeparatedStringToAuthorityList(userPermissionStr)); // 用户名，密码，权限列表（spring security提供的字段）
         userDetails.setId(userext.getId());
         userDetails.setUtype(userext.getUtype());           // 用户类型
         userDetails.setCompanyId(userext.getCompanyId());   // 所属企业

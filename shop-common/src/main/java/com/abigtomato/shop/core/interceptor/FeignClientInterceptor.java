@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 
 /**
- * feign拦截器
+ * 全局feign拦截器（用于服务间调用传递令牌信息）
  */
 public class FeignClientInterceptor implements RequestInterceptor {
 

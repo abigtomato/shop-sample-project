@@ -1,7 +1,7 @@
 package com.abigtomato.shop.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
-import com.abigtomato.shop.gateway.service.AuthService;
+import com.abigtomato.shop.gateway.client.AuthClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -17,32 +17,32 @@ import reactor.core.publisher.Mono;
 @Component
 public class AuthFilter implements GatewayFilter {
 
-    private AuthService authService;
+    private AuthClient authClient;
 
     @Autowired
-    public AuthFilter(AuthService authService) {
-        this.authService = authService;
+    public AuthFilter(AuthClient authClient) {
+        this.authClient = authClient;
     }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
 
-        String token = this.authService.getTokenFromCookie(request);
+        String token = this.authClient.getTokenFromCookie(request);
         if (StrUtil.isEmpty(token)) {
             // cookie中没有携带身份令牌，拦截
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete();
         }
 
-        String jwt = this.authService.getJwtFromHeader(request);
+        String jwt = this.authClient.getJwtFromHeader(request);
         if (StrUtil.isEmpty(jwt)) {
             // header中没有jwt令牌，拦截
             exchange.getResponse().setStatusCode(HttpStatus.NOT_ACCEPTABLE);
             return exchange.getResponse().setComplete();
         }
 
-        long expire = this.authService.getExpire(token);
+        long expire = this.authClient.getExpire(token);
         if (expire < 0) {
             // redis中的令牌信息过期，拦截
             exchange.getResponse().setStatusCode(HttpStatus.NOT_ACCEPTABLE);

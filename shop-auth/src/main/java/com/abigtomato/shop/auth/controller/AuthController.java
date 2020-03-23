@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -147,5 +148,20 @@ public class AuthController implements AuthApi {
 
         String jwtToken = authTokenOptional.get().getJwt_token();
         return new JwtResult(CommonCode.SUCCESS, jwtToken);
+    }
+
+    @Override
+    public String getTokenFromCookie(@RequestBody ServerHttpRequest request) {
+        return this.authService.getTokenFromCookie(request);
+    }
+
+    @Override
+    public String getJwtFromHeader(@RequestBody ServerHttpRequest request) {
+        return this.authService.getJwtFromHeader(request);
+    }
+
+    @Override
+    public long getExpire(@RequestParam(name = "token") String token) {
+        return this.authService.getExpire(token);
     }
 }

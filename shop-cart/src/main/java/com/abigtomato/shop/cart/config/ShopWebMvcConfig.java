@@ -1,4 +1,4 @@
-package com.abigtomato.shop.cart.client;
+package com.abigtomato.shop.cart.config;
 
 import com.abigtomato.shop.cart.interceptors.LoginInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;

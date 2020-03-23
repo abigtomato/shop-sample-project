@@ -1,5 +1,6 @@
 package com.abigtomato.shop.auth.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.abigtomato.shop.auth.service.AuthService;
 import com.abigtomato.shop.core.client.ServiceNameList;
 import com.abigtomato.shop.core.exception.ExceptionCast;
@@ -12,10 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 import org.springframework.util.LinkedMultiValueMap;
@@ -176,5 +176,47 @@ public class AuthServiceImpl implements AuthService {
 
         AuthToken authToken = JSON.parseObject(value, AuthToken.class);
         return Optional.ofNullable(authToken);
+    }
+
+    @Override
+    public String getTokenFromCookie(ServerHttpRequest request) {
+        MultiValueMap<String, HttpCookie> cookies = request.getCookies();
+
+        HttpCookie cookie = cookies.getFirst("uid");
+        if (cookie == null) {
+            return null;
+        }
+
+        String accessToken = cookie.getValue();
+        if (StrUtil.isEmpty(accessToken)) {
+            return null;
+        }
+
+        return accessToken;
+    }
+
+    @Override
+    public String getJwtFromHeader(ServerHttpRequest request) {
+        HttpHeaders headers = request.getHeaders();
+
+        String authorization = headers.getFirst("Authorization");
+        if (StrUtil.isEmpty(authorization)) {
+            return null;
+        }
+        if (!StrUtil.startWith(authorization, "Bearer ")) {
+            return null;
+        }
+
+        return authorization.substring(7);
+    }
+
+    @Override
+    public long getExpire(String token) {
+        String key = REDIS_KEY_PREFIX + token;
+        Long expire = this.stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
+        if (expire == null) {
+            return -1;
+        }
+        return expire;
     }
 }
