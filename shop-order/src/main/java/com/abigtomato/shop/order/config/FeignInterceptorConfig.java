@@ -12,6 +12,7 @@ public class FeignInterceptorConfig {
 
     @Bean
     public FeignClientInterceptor getFeignClientInterceptor() {
+        // 使用自定义feign拦截器，服务间调用传递令牌信息
         return new FeignClientInterceptor();
     }
 }

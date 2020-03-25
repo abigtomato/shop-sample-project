@@ -25,7 +25,7 @@ public interface CartApi {
 
     @GetMapping("/{userId}")
     @ApiOperation(value = "根据userId查询购物车")
-    Resp<List<Cart>> queryCheckedCartsByUserId(@PathVariable("userId") Long userId);
+    Resp<List<Cart>> queryCheckedCartsByUserId(@PathVariable("userId") String userId);
 
     @DeleteMapping("/{skuId}")
     @ApiOperation(value = "根据skuId删除购物车")

@@ -44,6 +44,10 @@ public class CartController implements CartApi {
     }
 
     @Override
+    public Resp<List<Cart>> queryCheckedCartsByUserId(String userId) {
+        return null;
+    }
+
     @GetMapping("/{userId}")
     public Resp<List<Cart>> queryCheckedCartsByUserId(@PathVariable("userId") Long userId) {
         return Resp.ok(this.cartService.queryCheckedCartsByUserId(userId));

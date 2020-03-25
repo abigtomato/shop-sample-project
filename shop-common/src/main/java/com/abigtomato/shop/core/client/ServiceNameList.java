@@ -11,4 +11,6 @@ public class ServiceNameList {
     public static final String ITEM_SERVICE = "item-service";
     public static final String SEARCH_SERVICE = "search-service";
     public static final String AUTH_SERVICE = "auth-service";
+    public static final String CART_SERVICE = "cart-service";
+    public static final String ORDER_SERVICE = "order-service";
 }
