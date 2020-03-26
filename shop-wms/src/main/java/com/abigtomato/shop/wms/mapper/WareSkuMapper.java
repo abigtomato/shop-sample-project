@@ -22,4 +22,7 @@ public interface WareSkuMapper extends BaseMapper<WareSkuEntity> {
 
     @Update(value = "UPDATE wms_ware_sku SET stock_locked = stock_locked - #{count} WHERE id = #{wareSkuId}")
     void unLockStore(@Param("wareSkuId") Long wareSkuId, @Param("count") Integer count);
+
+    @Update(value = "UPDATE wms_ware_sku SET stock_locked = stock_locked - #{count}, stock = stock - #{count} WHERE id = #{wareSkuId}")
+    void minusStore(@Param("wareSkuId") Long wareSkuId, @Param("count") Integer count);
 }

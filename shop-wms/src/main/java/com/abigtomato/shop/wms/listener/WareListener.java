@@ -12,6 +12,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -53,6 +54,30 @@ public class WareListener {
         // 库存解锁
         List<SkuLockVO> skuLockVOS = JSON.parseArray(lockJson, SkuLockVO.class);
         skuLockVOS.forEach(skuLockVO -> this.wareSkuMapper.unLockStore(skuLockVO.getWareSkuId(), skuLockVO.getCount()));
+
+        // 删除redis中的记录
+        this.redisTemplate.delete(KEY_PREFIX + orderToken);
+    }
+
+    /**
+     * 监听消息，减库存
+     * @param orderToken
+     */
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "WMS-MINUS-QUEUE", durable = "true"),
+            exchange = @Exchange(value = "SHOP-ORDER-EXCHANGE", ignoreDeclarationExceptions = "true", type = ExchangeTypes.TOPIC),
+            key = {"stock.minus"}
+    ))
+    public void minusStoreListener(String orderToken) {
+        // 根据orderToken从redis中获取被锁库存的商品
+        String lockJson = this.redisTemplate.opsForValue().get(KEY_PREFIX + orderToken);
+        if (StrUtil.isEmpty(lockJson)) {
+            return ;
+        }
+
+        // 减库存
+        List<SkuLockVO> skuLockVOS = JSON.parseArray(lockJson, SkuLockVO.class);
+        skuLockVOS.forEach(skuLockVO -> this.wareSkuMapper.minusStore(skuLockVO.getWareSkuId(), skuLockVO.getCount()));
 
         // 删除redis中的记录
         this.redisTemplate.delete(KEY_PREFIX + orderToken);

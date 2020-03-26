@@ -13,4 +13,7 @@ public interface OrderMapper extends BaseMapper<OrderEntity> {
 
     @Update(value = "UPDATE oms_order SET `status` = 4 WHERE order_sn = #{orderToken} AND `status` = 0")
     int closeOrder(@Param("orderToken") String orderToken);
+
+    @Update(value = "UPDATE oms_order SET `status` = 1 WHERE order_sn = #{orderToken} AND `status` = 0")
+    int payOrder(@Param("orderToken") String orderToken);
 }
