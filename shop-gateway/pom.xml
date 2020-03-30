@@ -16,6 +16,7 @@
             <groupId>com.abigtomato</groupId>
             <artifactId>shop-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+            <!-- 排除tomcat相关依赖 -->
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.tomcat.embed</groupId>

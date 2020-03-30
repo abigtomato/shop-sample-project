@@ -2,10 +2,10 @@ package com.abigtomato.shop.auth.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.abigtomato.shop.api.ums.model.XcMenu;
+import com.abigtomato.shop.api.ums.model.ext.XcUserExt;
 import com.abigtomato.shop.auth.client.UserClient;
 import com.abigtomato.shop.auth.pojo.UserJwt;
-import com.abigtomato.shop.model.ums.XcMenu;
-import com.abigtomato.shop.model.ums.ext.XcUserExt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

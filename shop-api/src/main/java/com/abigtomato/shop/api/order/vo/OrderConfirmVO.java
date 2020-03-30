@@ -10,10 +10,7 @@ import java.util.List;
 public class OrderConfirmVO {
 
     private List<MemberReceiveAddressEntity> addresses;
-
     private List<OrderItemVO> orderItems;
-
     private Integer bounds;
-
     private String orderToken; // 防止订单重复提交
 }

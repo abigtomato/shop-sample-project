@@ -12,7 +12,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 /**
- * Cookie 工具类
+ * Cookie工具类 V2
  */
 public final class CookieUtils {
 

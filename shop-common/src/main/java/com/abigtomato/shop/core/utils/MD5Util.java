@@ -31,25 +31,13 @@ public class MD5Util {
      * @throws IOException
      */
     public static String getFileMD5String(File file) throws IOException {
-        FileInputStream fileInputStream = null;
-        try {
-            fileInputStream = new FileInputStream(file);
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
             byte[] buffer = new byte[8192];
             int length;
             while ((length = fileInputStream.read(buffer)) != -1) {
                 MD5.update(buffer, 0, length);
             }
             return encodeHex(MD5.digest());
-        } catch (IOException e) {
-            throw e;
-        } finally {
-            try {
-                if (fileInputStream != null) {
-                    fileInputStream.close();
-                }
-            } catch (IOException e) {
-                throw e;
-            }
         }
     }
 
@@ -131,6 +119,7 @@ public class MD5Util {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         long endTime = System.currentTimeMillis();
         System.out.println("MD5:" + md5 + "\n time:" + ((endTime - beginTime)) + "ms");
 

@@ -1,13 +1,13 @@
 package com.abigtomato.shop.sms.service.impl;
 
-import com.abigtomato.shop.sms.entity.SkuBoundsEntity;
-import com.abigtomato.shop.sms.entity.SkuFullReductionEntity;
-import com.abigtomato.shop.sms.entity.SkuLadderEntity;
+import com.abigtomato.shop.api.sms.entity.SkuBoundsEntity;
+import com.abigtomato.shop.api.sms.entity.SkuFullReductionEntity;
+import com.abigtomato.shop.api.sms.entity.SkuLadderEntity;
+import com.abigtomato.shop.api.sms.vo.SkuSaleVO;
 import com.abigtomato.shop.sms.mapper.SkuBoundsMapper;
 import com.abigtomato.shop.sms.service.SkuBoundsService;
 import com.abigtomato.shop.sms.service.SkuLadderService;
 import com.abigtomato.shop.sms.service.SpuFullReductionService;
-import com.abigtomato.shop.sms.vo.SkuSaleVo;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class SkuBoundsServiceImpl extends ServiceImpl<SkuBoundsMapper, SkuBounds
 
     @Override
     @Transactional  // 开启本地事务
-    public void saveSale(SkuSaleVo skuSaleVo) {
+    public void saveSale(SkuSaleVO skuSaleVo) {
         // 3.1. 保存sms_sku_bounds
         SkuBoundsEntity skuBoundsEntity = new SkuBoundsEntity();
         skuBoundsEntity.setSkuId(skuSaleVo.getSkuId());

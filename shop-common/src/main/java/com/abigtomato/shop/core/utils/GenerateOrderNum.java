@@ -4,25 +4,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by mrt on 2018/3/27.
+ * 订单号生成工具
  */
 public class GenerateOrderNum {
+
     /**
      * 锁对象，可以为任意对象
      */
     private static Object lockObj = "lockerOrder";
+
     /**
      * 订单号生成计数器
      */
     private static long orderNumCount = 0L;
+
     /**
      * 每毫秒生成订单号数量最大值
      */
     private int maxPerMSECSize=1000;
-
-    /**
-     *
-     */
 
     /**
      * 生成非重复订单号，理论上限1毫秒1000个，可扩展

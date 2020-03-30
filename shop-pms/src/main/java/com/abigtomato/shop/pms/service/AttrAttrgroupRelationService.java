@@ -1,6 +1,6 @@
 package com.abigtomato.shop.pms.service;
 
-import com.abigtomato.shop.pms.entity.AttrAttrgroupRelationEntity;
+import com.abigtomato.shop.api.pms.entity.AttrAttrgroupRelationEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;

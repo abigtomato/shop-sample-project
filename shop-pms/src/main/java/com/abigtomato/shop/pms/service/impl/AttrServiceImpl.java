@@ -1,11 +1,11 @@
 package com.abigtomato.shop.pms.service.impl;
 
-import com.abigtomato.shop.pms.entity.AttrAttrgroupRelationEntity;
-import com.abigtomato.shop.pms.entity.AttrEntity;
+import com.abigtomato.shop.api.pms.entity.AttrAttrgroupRelationEntity;
+import com.abigtomato.shop.api.pms.entity.AttrEntity;
 import com.abigtomato.shop.pms.mapper.AttrMapper;
 import com.abigtomato.shop.pms.service.AttrAttrgroupRelationService;
 import com.abigtomato.shop.pms.service.AttrService;
-import com.abigtomato.shop.pms.vo.AttrVO;
+import com.abigtomato.shop.api.pms.vo.AttrVO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

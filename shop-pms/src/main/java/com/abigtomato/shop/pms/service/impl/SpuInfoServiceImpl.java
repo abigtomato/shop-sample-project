@@ -2,20 +2,20 @@ package com.abigtomato.shop.pms.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.abigtomato.shop.api.pms.entity.ProductAttrValueEntity;
+import com.abigtomato.shop.api.pms.entity.SkuImagesEntity;
+import com.abigtomato.shop.api.pms.entity.SkuSaleAttrValueEntity;
+import com.abigtomato.shop.api.pms.entity.SpuInfoEntity;
+import com.abigtomato.shop.api.sms.vo.SkuSaleVO;
 import com.abigtomato.shop.core.bean.PageVo;
 import com.abigtomato.shop.core.bean.Query;
 import com.abigtomato.shop.core.bean.QueryCondition;
-import com.abigtomato.shop.pms.entity.ProductAttrValueEntity;
-import com.abigtomato.shop.pms.entity.SkuImagesEntity;
-import com.abigtomato.shop.pms.entity.SkuSaleAttrValueEntity;
-import com.abigtomato.shop.pms.entity.SpuInfoEntity;
 import com.abigtomato.shop.pms.feign.ShopSmsClient;
 import com.abigtomato.shop.pms.mapper.SpuInfoMapper;
 import com.abigtomato.shop.pms.service.*;
-import com.abigtomato.shop.pms.vo.BaseAttrVo;
-import com.abigtomato.shop.pms.vo.SkuInfoVo;
-import com.abigtomato.shop.pms.vo.SpuInfoVo;
-import com.abigtomato.shop.sms.vo.SkuSaleVo;
+import com.abigtomato.shop.api.pms.vo.BaseAttrVo;
+import com.abigtomato.shop.api.pms.vo.SkuInfoVo;
+import com.abigtomato.shop.api.pms.vo.SpuInfoVo;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -156,7 +156,7 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
             }
 
             // 3.保存营销信息的3张表(feign远程调用sms保存)
-            SkuSaleVo skuSaleVo = new SkuSaleVo();
+            SkuSaleVO skuSaleVo = new SkuSaleVO();
             BeanUtils.copyProperties(skuInfoVo, skuSaleVo);
             skuSaleVo.setSkuId(skuId);
             this.shopSmsClient.saveSale(skuSaleVo);

@@ -1,6 +1,6 @@
 package com.abigtomato.shop.api.ums.model.ext;
 
-import com.abigtomato.shop.model.ums.Category;
+import com.abigtomato.shop.api.ums.model.Category;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

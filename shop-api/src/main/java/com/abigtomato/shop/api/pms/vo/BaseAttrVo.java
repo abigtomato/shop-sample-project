@@ -1,8 +1,8 @@
-package com.abigtomato.shop.pms.vo;
+package com.abigtomato.shop.api.pms.vo;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.abigtomato.shop.pms.entity.ProductAttrValueEntity;
+import com.abigtomato.shop.api.pms.entity.ProductAttrValueEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

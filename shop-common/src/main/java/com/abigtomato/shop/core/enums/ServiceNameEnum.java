@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 服务名称
+ * 微服务名称枚举
  */
 @Getter
 @NoArgsConstructor

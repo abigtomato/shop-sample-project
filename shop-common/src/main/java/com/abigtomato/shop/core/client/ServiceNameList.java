@@ -1,5 +1,8 @@
 package com.abigtomato.shop.core.client;
 
+/**
+ * 微服务列表查常量
+ */
 public class ServiceNameList {
 
     public static final String PMS_SERVICE = "pms-service";

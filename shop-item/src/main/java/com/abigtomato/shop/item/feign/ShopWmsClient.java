@@ -1,8 +1,9 @@
 package com.abigtomato.shop.item.feign;
 
-import com.abigtomato.shop.wms.api.ShopWmsApi;
+import com.abigtomato.shop.api.wms.WmsApi;
+import com.abigtomato.shop.core.client.ServiceNameList;
 import org.springframework.cloud.openfeign.FeignClient;
 
-@FeignClient(value = "wms-service")
-public interface ShopWmsClient extends ShopWmsApi {
+@FeignClient(value = ServiceNameList.WMS_SERVICE)
+public interface ShopWmsClient extends WmsApi {
 }

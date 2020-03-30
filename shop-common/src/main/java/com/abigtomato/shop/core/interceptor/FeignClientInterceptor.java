@@ -19,12 +19,14 @@ public class FeignClientInterceptor implements RequestInterceptor {
         if (requestAttributes != null) {
             // 获取request
             HttpServletRequest request = requestAttributes.getRequest();
+
             // 取出当前请求的header
             Enumeration<String> headerNames = request.getHeaderNames();
             if (headerNames != null) {
                 while (headerNames.hasMoreElements()) {
                     String headerName = headerNames.nextElement();
                     String headerValue = request.getHeader(headerName);
+
                     // 将header向下传递（传递jwt令牌）
                     requestTemplate.header(headerName, headerValue);
                 }

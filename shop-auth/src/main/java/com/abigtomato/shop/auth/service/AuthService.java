@@ -1,6 +1,6 @@
 package com.abigtomato.shop.auth.service;
 
-import com.abigtomato.shop.model.ums.ext.AuthToken;
+import com.abigtomato.shop.api.ums.model.ext.AuthToken;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
 import java.util.Optional;

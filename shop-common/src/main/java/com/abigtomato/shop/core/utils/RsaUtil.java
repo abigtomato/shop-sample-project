@@ -7,6 +7,9 @@ import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
+/**
+ * rsa加密工具类
+ */
 public class RsaUtil {
 
     /**

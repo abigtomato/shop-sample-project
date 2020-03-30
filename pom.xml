@@ -13,14 +13,10 @@
         <module>shop-sms</module>
         <module>shop-ums</module>
         <module>shop-wms</module>
-        <module>shop-sms-interface</module>
         <module>shop-search</module>
-        <module>shop-pms-interface</module>
-        <module>shop-wms-interface</module>
         <module>shop-index</module>
         <module>shop-item</module>
         <module>shop-common</module>
-        <module>shop-model</module>
         <module>shop-api</module>
         <module>shop-auth</module>
         <module>shop-cart</module>
@@ -60,6 +56,7 @@
         <commons-lang3.version>3.6</commons-lang3.version>
         <spring-security-jwt.version>1.0.8.RELEASE</spring-security-jwt.version>
         <zip4j.version>1.3.1</zip4j.version>
+        <alipay.version>4.8.10.ALL</alipay.version>
         <docker.image.prefix>shop-sample-project</docker.image.prefix>
     </properties>
 
@@ -226,6 +223,12 @@
                 <groupId>net.lingala.zip4j</groupId>
                 <artifactId>zip4j</artifactId>
                 <version>${zip4j.version}</version>
+            </dependency>
+            <!-- 阿里支付 -->
+            <dependency>
+                <groupId>com.alipay.sdk</groupId>
+                <artifactId>alipay-sdk-java</artifactId>
+                <version>${alipay.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

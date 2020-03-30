@@ -64,7 +64,6 @@ public class OmsServiceImpl extends ServiceImpl<OrderMapper, OrderEntity> implem
         Resp<MemberEntity> memberEntityResp = this.umsClient.queryMemberById(submitVO.getUserId());
         MemberEntity memberEntity = memberEntityResp.getData();
         orderEntity.setMemberUsername(memberEntity.getUsername());
-//        orderEntity.setMemberId(submitVO.getUserId());
 
         // 清算每个商品赠送积分
         orderEntity.setIntegration(0);

@@ -1,9 +1,9 @@
 package com.abigtomato.shop.index.controller;
 
+import com.abigtomato.shop.api.pms.entity.CategoryEntity;
+import com.abigtomato.shop.api.pms.vo.CategoryVO;
 import com.abigtomato.shop.core.bean.Resp;
 import com.abigtomato.shop.index.service.IndexService;
-import com.abigtomato.shop.pms.entity.CategoryEntity;
-import com.abigtomato.shop.pms.vo.CategoryVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -37,15 +37,15 @@ public class IndexController {
 
     @ApiOperation(value = "查询子分类")
     @GetMapping(value = "/cates/{pid}")
-    public Resp<List<CategoryVo>> querySubCategories(@PathVariable("pid") Long pid) {
-        List<CategoryVo> categoryVOS = this.indexService.querySubCategories(pid);
+    public Resp<List<CategoryVO>> querySubCategories(@PathVariable("pid") Long pid) {
+        List<CategoryVO> categoryVOS = this.indexService.querySubCategories(pid);
         return Resp.ok(categoryVOS);
     }
 
     @ApiOperation(value = "查询子分类V2")
     @GetMapping(value = "/v2/cates/{pid}")
-    public Resp<List<CategoryVo>> querySubCategoriesV2(@PathVariable("pid") Long pid) {
-        List<CategoryVo> categoryVOS = this.indexService.querySubCategoriesV2(pid);
+    public Resp<List<CategoryVO>> querySubCategoriesV2(@PathVariable("pid") Long pid) {
+        List<CategoryVO> categoryVOS = this.indexService.querySubCategoriesV2(pid);
         return Resp.ok(categoryVOS);
     }
 }

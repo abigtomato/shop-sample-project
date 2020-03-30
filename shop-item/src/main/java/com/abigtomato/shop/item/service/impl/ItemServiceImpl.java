@@ -1,15 +1,15 @@
 package com.abigtomato.shop.item.service.impl;
 
+import com.abigtomato.shop.api.pms.entity.*;
+import com.abigtomato.shop.api.pms.vo.ItemGroupVO;
+import com.abigtomato.shop.api.sms.vo.SaleVO;
+import com.abigtomato.shop.api.wms.entity.WareSkuEntity;
 import com.abigtomato.shop.core.bean.Resp;
 import com.abigtomato.shop.item.feign.ShopPmsClient;
 import com.abigtomato.shop.item.feign.ShopSmsClient;
 import com.abigtomato.shop.item.feign.ShopWmsClient;
 import com.abigtomato.shop.item.service.ItemService;
 import com.abigtomato.shop.item.vo.ItemVo;
-import com.abigtomato.shop.pms.entity.*;
-import com.abigtomato.shop.pms.vo.ItemGroupVo;
-import com.abigtomato.shop.sms.vo.SaleVo;
-import com.abigtomato.shop.wms.entity.WareSkuEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,8 +100,8 @@ public class ItemServiceImpl implements ItemService {
 
         // 根据skuId查询营销信息（单独，异步执行）
         CompletableFuture<Void> saleCompletableFuture = CompletableFuture.runAsync(() -> {
-            Resp<List<SaleVo>> salesResp = this.shopSmsClient.querySalesBySkuId(skuId);
-            List<SaleVo> saleVOList = salesResp.getData();
+            Resp<List<SaleVO>> salesResp = this.shopSmsClient.querySalesBySkuId(skuId);
+            List<SaleVO> saleVOList = salesResp.getData();
             itemVo.setSales(saleVOList);
         }, threadPoolExecutor);
 
@@ -132,8 +132,8 @@ public class ItemServiceImpl implements ItemService {
 
         // 根据spuId和cateId查询组及组下规格参数（根据skuCompletableFuture串行执行）
         CompletableFuture<Void> groupCompletableFuture = skuCompletableFuture.thenAcceptAsync(sku -> {
-            Resp<List<ItemGroupVo>> itemGroupResp = this.shopPmsClient.queryItemGroupVOByCidAndSpuId(((SkuInfoEntity) sku).getCatalogId(), ((SkuInfoEntity) sku).getSpuId());
-            List<ItemGroupVo> itemGroupVOS = itemGroupResp.getData();
+            Resp<List<ItemGroupVO>> itemGroupResp = this.shopPmsClient.queryItemGroupVOByCidAndSpuId(((SkuInfoEntity) sku).getCatalogId(), ((SkuInfoEntity) sku).getSpuId());
+            List<ItemGroupVO> itemGroupVOS = itemGroupResp.getData();
             itemVo.setGroups(itemGroupVOS);
         });
 
@@ -142,7 +142,6 @@ public class ItemServiceImpl implements ItemService {
         CompletableFuture.allOf(spuCompletableFuture, imageCompletableFuture, brandCompletableFuture,
                 cateCompletableFuture, saleCompletableFuture, storeCompletableFuture,
                 saleAttrCompletableFuture, descCompletableFuture, groupCompletableFuture).join();
-
         return itemVo;
     }
 }

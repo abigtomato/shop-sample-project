@@ -1,6 +1,6 @@
 package com.abigtomato.shop.pms.mapper;
 
-import com.abigtomato.shop.pms.entity.AttrAttrgroupRelationEntity;
+import com.abigtomato.shop.api.pms.entity.AttrAttrgroupRelationEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

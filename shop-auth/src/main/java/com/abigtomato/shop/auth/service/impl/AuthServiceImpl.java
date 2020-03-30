@@ -1,11 +1,11 @@
 package com.abigtomato.shop.auth.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.abigtomato.shop.api.ums.model.ext.AuthToken;
+import com.abigtomato.shop.api.ums.model.response.AuthCode;
 import com.abigtomato.shop.auth.service.AuthService;
 import com.abigtomato.shop.core.client.ServiceNameList;
 import com.abigtomato.shop.core.exception.ExceptionCast;
-import com.abigtomato.shop.model.ums.ext.AuthToken;
-import com.abigtomato.shop.model.ums.response.AuthCode;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

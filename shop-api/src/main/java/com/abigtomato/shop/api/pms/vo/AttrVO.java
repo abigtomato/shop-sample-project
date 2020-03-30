@@ -1,6 +1,6 @@
-package com.abigtomato.shop.pms.vo;
+package com.abigtomato.shop.api.pms.vo;
 
-import com.abigtomato.shop.pms.entity.AttrEntity;
+import com.abigtomato.shop.api.pms.entity.AttrEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

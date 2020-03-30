@@ -1,6 +1,6 @@
 package com.abigtomato.shop.api.ums;
 
-import com.abigtomato.shop.model.ums.ext.XcUserExt;
+import com.abigtomato.shop.api.ums.model.ext.XcUserExt;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;

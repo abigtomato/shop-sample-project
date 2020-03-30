@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 public class CartServiceImpl implements CartService {
 
     private static final String KEY_PREFIX = "shop:cart:";
+
     private static final String PRICE_PREFIX = "shop:sku:";
 
     private ShopPmsClient pmsClient;

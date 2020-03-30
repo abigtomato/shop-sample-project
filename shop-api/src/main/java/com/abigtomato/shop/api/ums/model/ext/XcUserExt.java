@@ -1,7 +1,7 @@
 package com.abigtomato.shop.api.ums.model.ext;
 
-import com.abigtomato.shop.model.ums.XcMenu;
-import com.abigtomato.shop.model.ums.XcUser;
+import com.abigtomato.shop.api.ums.model.XcMenu;
+import com.abigtomato.shop.api.ums.model.XcUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

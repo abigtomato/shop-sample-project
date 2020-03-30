@@ -1,6 +1,6 @@
 package com.abigtomato.shop.sms.service.impl;
 
-import com.abigtomato.shop.sms.entity.SpuFullReductionEntity;
+import com.abigtomato.shop.api.sms.entity.SpuFullReductionEntity;
 import com.abigtomato.shop.sms.mapper.SpuFullReductionMapper;
 import com.abigtomato.shop.sms.service.SpuFullReductionService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

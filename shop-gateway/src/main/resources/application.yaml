@@ -7,7 +7,7 @@ spring:
   redis:
     host: 192.168.121.100
     port: 6379
-    timeout: 5000 #连接超时 毫秒
+    timeout: 5000 #连接超时，毫秒
     jedis:
       pool:
         maxActive: 3
@@ -58,3 +58,4 @@ spring:
             - Path=/api/order/**
           filters:
             - RewritePath=/api(?<segment>/?.*), $\{segment}
+            - Auth  # 为特定服务指定自定义的登录拦截过滤器

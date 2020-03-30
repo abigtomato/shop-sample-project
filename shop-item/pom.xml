@@ -20,19 +20,7 @@
 
         <dependency>
             <groupId>com.abigtomato</groupId>
-            <artifactId>shop-pms-interface</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.abigtomato</groupId>
-            <artifactId>shop-sms-interface</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.abigtomato</groupId>
-            <artifactId>shop-wms-interface</artifactId>
+            <artifactId>shop-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 

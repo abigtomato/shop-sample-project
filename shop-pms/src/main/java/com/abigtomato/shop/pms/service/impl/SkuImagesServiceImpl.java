@@ -1,6 +1,6 @@
 package com.abigtomato.shop.pms.service.impl;
 
-import com.abigtomato.shop.pms.entity.SkuImagesEntity;
+import com.abigtomato.shop.api.pms.entity.SkuImagesEntity;
 import com.abigtomato.shop.pms.mapper.SkuImagesMapper;
 import com.abigtomato.shop.pms.service.SkuImagesService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

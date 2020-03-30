@@ -1,14 +1,16 @@
-package com.abigtomato.shop.sms.vo;
+package com.abigtomato.shop.api.pms.vo;
 
+import com.abigtomato.shop.api.pms.entity.SkuInfoEntity;
+import com.abigtomato.shop.api.pms.entity.SkuSaleAttrValueEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class SkuSaleVo {
-
-    private Long skuId;
+public class SkuInfoVo extends SkuInfoEntity {
 
     // 积分营销相关字段
     private BigDecimal growBounds;
@@ -24,4 +26,9 @@ public class SkuSaleVo {
     private BigDecimal fullPrice;
     private BigDecimal reducePrice;
     private Integer fullAddOther;
+
+    // 销售属性及值
+    private List<SkuSaleAttrValueEntity> saleAttrs;
+    // sku图片
+    private List<String> images;
 }

@@ -1,13 +1,13 @@
 package com.abigtomato.shop.search.listener;
 
+import com.abigtomato.shop.api.pms.entity.*;
+import com.abigtomato.shop.api.wms.entity.WareSkuEntity;
 import com.abigtomato.shop.core.bean.Resp;
-import com.abigtomato.shop.pms.entity.*;
 import com.abigtomato.shop.search.feign.ShopPmsClient;
 import com.abigtomato.shop.search.feign.ShopWmsClient;
 import com.abigtomato.shop.search.pojo.GoodsAttr;
 import com.abigtomato.shop.search.pojo.GoodsDoc;
 import com.abigtomato.shop.search.repository.GoodsRepository;
-import com.abigtomato.shop.wms.entity.WareSkuEntity;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;

@@ -1,6 +1,6 @@
 package com.abigtomato.shop.pms.service.impl;
 
-import com.abigtomato.shop.pms.entity.ProductAttrValueEntity;
+import com.abigtomato.shop.api.pms.entity.ProductAttrValueEntity;
 import com.abigtomato.shop.pms.mapper.ProductAttrValueMapper;
 import com.abigtomato.shop.pms.service.ProductAttrValueService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

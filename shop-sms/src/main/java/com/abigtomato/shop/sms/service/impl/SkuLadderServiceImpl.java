@@ -1,6 +1,6 @@
 package com.abigtomato.shop.sms.service.impl;
 
-import com.abigtomato.shop.sms.entity.SkuLadderEntity;
+import com.abigtomato.shop.api.sms.entity.SkuLadderEntity;
 import com.abigtomato.shop.sms.mapper.SkuLadderMapper;
 import com.abigtomato.shop.sms.service.SkuLadderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;

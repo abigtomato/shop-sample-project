@@ -1,10 +1,10 @@
 package com.abigtomato.shop.pms.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.abigtomato.shop.pms.entity.SpuInfoDescEntity;
+import com.abigtomato.shop.api.pms.entity.SpuInfoDescEntity;
 import com.abigtomato.shop.pms.mapper.SpuInfoDescMapper;
 import com.abigtomato.shop.pms.service.SpuInfoDescService;
-import com.abigtomato.shop.pms.vo.SpuInfoVo;
+import com.abigtomato.shop.api.pms.vo.SpuInfoVo;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

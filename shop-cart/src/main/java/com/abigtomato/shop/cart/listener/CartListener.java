@@ -53,6 +53,10 @@ public class CartListener {
                 .set(PRICE_PREFIX + skuInfoEntity.getSkuId(), skuInfoEntity.getPrice().toString()));
     }
 
+    /**
+     * 监听消息删除购物车
+     * @param map
+     */
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "ORDER-CART-QUEUE", durable = "true"),
             exchange = @Exchange(value = "SHOP-ORDER-EXCHANGE", ignoreDeclarationExceptions = "true", type = ExchangeTypes.TOPIC),

@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * 雪花算法
+ *
  * java edition of Twitter <b>Snowflake</b>, a network service for generating
  * unique ID numbers at high scale with some simple guarantees.
  *

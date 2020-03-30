@@ -5,8 +5,6 @@ import com.abigtomato.shop.core.exception.RRException;
 
 /**
  * SQL过滤
- *
- * @author Mark sunlightcs@gmail.com
  */
 public class SQLFilter {
 

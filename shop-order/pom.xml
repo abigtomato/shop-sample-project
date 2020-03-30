@@ -13,12 +13,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.alipay.sdk</groupId>
-            <artifactId>alipay-sdk-java</artifactId>
-            <version>4.8.10.ALL</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.abigtomato</groupId>
             <artifactId>shop-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
@@ -28,6 +22,11 @@
             <groupId>com.abigtomato</groupId>
             <artifactId>shop-api</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
         </dependency>
 
         <dependency>

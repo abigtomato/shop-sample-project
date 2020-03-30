@@ -44,8 +44,6 @@ public class OrderServiceImpl implements OrderService {
 
     private ShopUmsClient umsClient;
 
-    private ShopSmsClient smsClient;
-
     private ShopWmsClient wmsClient;
 
     private ThreadPoolExecutor threadPoolExecutor;
@@ -61,7 +59,6 @@ public class OrderServiceImpl implements OrderService {
                             ShopOmsClient omsClient,
                             ShopCartClient cartClient,
                             ShopUmsClient umsClient,
-                            ShopSmsClient smsClient,
                             ShopWmsClient wmsClient,
                             ThreadPoolExecutor threadPoolExecutor,
                             StringRedisTemplate redisTemplate,
@@ -70,7 +67,6 @@ public class OrderServiceImpl implements OrderService {
         this.omsClient = omsClient;
         this.cartClient = cartClient;
         this.umsClient = umsClient;
-        this.smsClient = smsClient;
         this.wmsClient = wmsClient;
         this.threadPoolExecutor = threadPoolExecutor;
         this.redisTemplate = redisTemplate;

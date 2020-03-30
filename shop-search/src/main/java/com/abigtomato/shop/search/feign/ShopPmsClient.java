@@ -1,8 +1,9 @@
 package com.abigtomato.shop.search.feign;
 
-import com.abigtomato.shop.pms.api.ShopPmsApi;
+import com.abigtomato.shop.api.pms.PmsApi;
+import com.abigtomato.shop.core.client.ServiceNameList;
 import org.springframework.cloud.openfeign.FeignClient;
 
-@FeignClient(value = "pms-service")
-public interface ShopPmsClient extends ShopPmsApi {
+@FeignClient(value = ServiceNameList.PMS_SERVICE)
+public interface ShopPmsClient extends PmsApi {
 }

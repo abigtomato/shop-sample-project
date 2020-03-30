@@ -10,7 +10,11 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Map;
 
+/**
+ * jwt工具类
+ */
 public class JwtUtil {
+
     /**
      * 私钥加密token
      *
@@ -49,5 +53,4 @@ public class JwtUtil {
         Jws<Claims> claimsJws = parserToken(token, key);
         return claimsJws.getBody();
     }
-
 }

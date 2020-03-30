@@ -29,12 +29,13 @@ public class CacheAspect {
 
     private StringRedisTemplate redisTemplate;
 
-    @Resource
     private RedissonClient redissonClient;
 
     @Autowired
-    public CacheAspect(StringRedisTemplate redisTemplate) {
+    public CacheAspect(StringRedisTemplate redisTemplate,
+                       RedissonClient redissonClient) {
         this.redisTemplate = redisTemplate;
+        this.redissonClient = redissonClient;
     }
 
     /**
@@ -90,6 +91,12 @@ public class CacheAspect {
         return result;
     }
 
+    /**
+     * 尝试从缓存中获取数据
+     * @param key
+     * @param returnType
+     * @return
+     */
     private Optional<Object> cacheHit(String key, Class<?> returnType) {
         String value = this.redisTemplate.opsForValue().get(key);
         if (StrUtil.isEmpty(value)) {

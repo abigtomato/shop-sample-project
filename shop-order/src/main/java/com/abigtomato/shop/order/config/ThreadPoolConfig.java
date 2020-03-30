@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class ThreadPoolConfig {
 
     @Bean
-    public ThreadPoolExecutor threadPoolExecutor(){
+    public ThreadPoolExecutor threadPoolExecutor() {
         return new ThreadPoolExecutor(50, 200, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10000));
     }
 }

@@ -67,8 +67,7 @@ public class HttpClient {
 	}
 
 	public void addParameter(String key, String value) {
-		if (param == null)
-			param = new HashMap<String, String>();
+		if (param == null) param = new HashMap<String, String>();
 		param.put(key, value);
 	}
 
@@ -89,10 +88,8 @@ public class HttpClient {
 			StringBuilder url = new StringBuilder(this.url);
 			boolean isFirst = true;
 			for (String key : param.keySet()) {
-				if (isFirst)
-					url.append("?");
-				else
-					url.append("&");
+				if (isFirst) url.append("?");
+				else url.append("&");
 				url.append(key).append("=").append(param.get(key));
 			}
 			this.url = url.toString();
@@ -103,51 +100,47 @@ public class HttpClient {
 
 	private void setEntity(HttpEntityEnclosingRequestBase http) {
 		if (param != null) {
-			List<NameValuePair> nvps = new LinkedList<NameValuePair>();
-			for (String key : param.keySet())
+			List<NameValuePair> nvps = new LinkedList<>();
+			for (String key : param.keySet()) {
 				nvps.add(new BasicNameValuePair(key, param.get(key))); // 参数
+			}
 			http.setEntity(new UrlEncodedFormEntity(nvps, Consts.UTF_8)); // 设置参数
 		}
+
 		if (xmlParam != null) {
 			http.setEntity(new StringEntity(xmlParam, Consts.UTF_8));
 		}
 	}
 
-	private void execute(HttpUriRequest http) throws ClientProtocolException,
-			IOException {
+	private void execute(HttpUriRequest http) throws ClientProtocolException, IOException {
 		CloseableHttpClient httpClient = null;
 		try {
 			if (isHttps) {
+				// 信任所有
 				SSLContext sslContext = new SSLContextBuilder()
-						.loadTrustMaterial(null, new TrustStrategy() {
-							// 信任所有
-							public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-								return true;
-							}
-						}).build();
-				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
-						sslContext);
-				httpClient = HttpClients.custom().setSSLSocketFactory(sslsf)
-						.build();
+						.loadTrustMaterial(null, (chain, authType) -> true).build();
+				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
+				httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
 			} else {
 				httpClient = HttpClients.createDefault();
 			}
-			CloseableHttpResponse response = httpClient.execute(http);
-			try {
+
+			try (CloseableHttpResponse response = httpClient.execute(http)) {
 				if (response != null) {
-					if (response.getStatusLine() != null)
+					if (response.getStatusLine() != null) {
 						statusCode = response.getStatusLine().getStatusCode();
+					}
 					HttpEntity entity = response.getEntity();
 					// 响应内容
 					content = EntityUtils.toString(entity, Consts.UTF_8);
 				}
-			} finally {
-				response.close();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			httpClient.close();
+			if (httpClient != null) {
+				httpClient.close();
+			}
 		}
 	}
 

@@ -1,9 +1,9 @@
 package com.abigtomato.shop.api.auth;
 
+import com.abigtomato.shop.api.ums.model.request.LoginRequest;
+import com.abigtomato.shop.api.ums.model.response.JwtResult;
+import com.abigtomato.shop.api.ums.model.response.LoginResult;
 import com.abigtomato.shop.core.response.ResponseResult;
-import com.abigtomato.shop.model.ums.request.LoginRequest;
-import com.abigtomato.shop.model.ums.response.JwtResult;
-import com.abigtomato.shop.model.ums.response.LoginResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.server.reactive.ServerHttpRequest;

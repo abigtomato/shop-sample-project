@@ -1,6 +1,6 @@
 package com.abigtomato.shop.pms.service.impl;
 
-import com.abigtomato.shop.pms.entity.AttrAttrgroupRelationEntity;
+import com.abigtomato.shop.api.pms.entity.AttrAttrgroupRelationEntity;
 import com.abigtomato.shop.pms.mapper.AttrAttrgroupRelationMapper;
 import com.abigtomato.shop.pms.service.AttrAttrgroupRelationService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
