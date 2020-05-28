@@ -82,7 +82,10 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoMapper, SpuInfoEntity
         
         String key = condition.getKey();
         if (StrUtil.isNotEmpty(key)) {
-            spuInfoQuery.lambda().and(t -> t.eq(SpuInfoEntity::getId, key).or().like(SpuInfoEntity::getSpuName, key));
+            spuInfoQuery.lambda()
+                    .and(t -> t.eq(SpuInfoEntity::getId, key)
+                    .or()
+                    .like(SpuInfoEntity::getSpuName, key));
         }
 
         IPage<SpuInfoEntity> page = this.page(new Query<SpuInfoEntity>().getPage(condition), spuInfoQuery);
