@@ -46,7 +46,7 @@
         <hutool.version>5.2.1</hutool.version>
         <lombox.version>1.18.12</lombox.version>
         <redisson.version>3.11.6</redisson.version>
-        <guava.version>24.0-jre</guava.version>
+        <guava.version>24.1.1-jre</guava.version>
         <okhttp.version>3.9.1</okhttp.version>
         <feign-okhttp.version>8.18.0</feign-okhttp.version>
         <commons-io.version>2.6</commons-io.version>
